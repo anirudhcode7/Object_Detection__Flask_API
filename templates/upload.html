@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+<html>
+<body style="background-color: powderblue;">
 <title>Upload Image or Video</title>
 <center>
 {% block body %}
@@ -17,12 +19,15 @@
 {% if msg %}
 	<p class=message><strong>Message:</strong> {{ msg }}
 {% endif %}
-  <h1>Overview</h1>
-	<h1>UPLOAD A FILE</h1>
+  <h1 style="background-color: DodgerBlue;font-family: cursive;">Hello Ciphense</h1>
+	<h1 style="font-size: 200%;font-family: verdana;">Please Upload a file</h1>
+	<p>Supported Formats:- jpg, jpeg, png</p>
 	<form method = 'POST' enctype="multipart/form-data">
 		<input type="file" name="file">
-		<input type="submit" name="submit" value="UPLOAD">
+		<input type="submit" name="submit" value="Upload">
 	</form>
 
 {% endblock %}
 </center>
+</body>
+</html>

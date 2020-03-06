@@ -42,43 +42,33 @@ class Detector:
 	def __init__(self,weights_path,config_path):
 		global net
 		net  = cv2.dnn.readNet(weights_path,config_path)
-
+		global human_faces	
+		global animals
+		self.cnts = dict()
+		human_faces = ["person"]
+		animals = ["bird","cat","dog","horse","sheep","cow","elephant","bear","zebra","giraffe"]
 
 	    # if frame_cnt %10 == 0:
 	def detectObject(self,image_path):
+		
 	    image = cv2.imread(image_path)
 	#image=cv2.resize(image, (1920, 416))
-	    image = adjust_gamma(image, gamma=1)
+	    #image = adjust_gamma(image, gamma=1)
 	    #image = cv2.transpose(image, image)
-
+	    self.cnts = {'humans':0,'animals':0,'objects':0}
 	    blob = cv2.dnn.blobFromImage(image, 1.0/255.0, (416,416), [0,0,0], True, crop=False)
 	    Width = image.shape[1]
 	    Height = image.shape[0]
 	    net.setInput(blob)
-
 	    outs = net.forward(getOutputsNames(net))
-
 	    class_ids = []
 	    confidences = []
 	    boxes = []
-	    conf_threshold = 0.5
-	    nms_threshold = 0.5
-
-
-	    #print(len(outs))
-
-	    # In case of tiny YOLOv3 we have 2 output(outs) from 2 different scales [3 bounding box per each scale]
-	    # For normal normal YOLOv3 we have 3 output(outs) from 3 different scales [3 bounding box per each scale]
-
-	    # For tiny YOLOv3, the first output will be 507x6 = 13x13x18
-	    # 18=3*(4+1+1) 4 boundingbox offsets, 1 objectness prediction, and 1 class score.
-	    # and the second output will be = 2028x6=26x26x18 (18=3*6) 
+	    conf_threshold = 0.1
+	    nms_threshold = 0.1 
 
 	    for out in outs: 
-	        #print(out.shape)
 	        for detection in out:
-	            #print(detection)
-
 	        #each detection  has the form like this [center_x center_y width height obj_score class_1_score class_2_score ..]
 	            scores = detection[5:]#classes scores starts from index 5
 	            class_id = np.argmax(scores)
@@ -104,6 +94,13 @@ class Detector:
 	        y = box[1]
 	        w = box[2]
 	        h = box[3]
+	        lbl = str(classes[class_ids[i]])
+	        if lbl in human_faces:
+	        	self.cnts['humans'] +=1
+	        elif lbl in animals:
+	        	self.cnts['animals']+=1
+	        else:
+	        	self.cnts['objects']+=1
 	        draw_pred(image, class_ids[i], confidences[i], round(x), round(y), round(x+w), round(y+h))
 
 	    # Put efficiency information.
@@ -112,7 +109,4 @@ class Detector:
 	    cv2.putText(image, label, (0, 15), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0))
 	    # cv2.imshow("object detection", image)
 
-	    return image,class_ids
-	    # wait until any key is pressed
-	    # if cv2.waitKey(0) & 0xFF == ord('q'):
-	    #     cv2.destroyAllWindows()
+	    return image,class_ids,self.cnts
