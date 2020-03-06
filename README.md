@@ -1,13 +1,13 @@
-#Object_Detection__Flask_API
-
+Object_Detection__Flask_API
+===========================
 I used Pre-trained Yolo-v3 Object Detection Model for Object Detection and a Single Shot Detector Caffe Model for Face Detection.
 Download the weight files that is Yolo-v3-spp pretrained object detection model 
 Link:- https://pjreddie.com/media/files/yolov3-spp.weights
 
 Please Make Sure to install all the required libraries and dependencies in the requirements.txt file and create a conda environment before that.
 
-#To Run The API:-
-
+To Run The API:-
+----------------
 1) Clone the Repository.
 2) Download the weights file from above link and keep it in the Yolo folder downloaded.
 3) Open the command prompt in the directory.
